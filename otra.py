@@ -16,8 +16,67 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     # Fixing random state for reproducibility
     np.random.seed(19680801)
+    
+    
+    # Definir la función de costo
+    def costo(x, y):
+        return (x - 2)**2 + (y - 3)**2
 
-    dt = 0.01
+    # Función para graficar la región factible con colores basados en el costo y marcar el máximo
+    def plot_region_max(c=10, x_min=0, y_min=0):
+        # Crear un grid de puntos
+        x = np.linspace(x_min, c, 400)
+        y = np.linspace(y_min, c, 400)
+        X, Y = np.meshgrid(x, y)
+        
+        # Evaluar la función de costo en cada punto del grid
+        Z = costo(X, Y)
+        
+        # Definir la región factible: x>=x_min, y>=y_min y x+y<=c
+        factible = (X >= x_min) & (Y >= y_min) & (X + Y <= c)
+        
+        # Para los puntos no factibles, asignamos NaN para que no se coloreen
+        Z_feasible = np.where(factible, Z, np.nan)
+        
+        # Calcular el máximo en la región factible
+        max_idx = np.nanargmax(Z_feasible)
+        X_flat = X.flatten()
+        Y_flat = Y.flatten()
+        Z_flat = Z_feasible.flatten()
+        x_max_val = X_flat[max_idx]
+        y_max_val = Y_flat[max_idx]
+        max_val = Z_flat[max_idx]
+        
+        # Graficar la región factible coloreada por el costo
+        fig, axs = plt.subplots()
+        im = axs.imshow(Z_feasible, extent=(x_min, c, y_min, c),
+                            origin='lower', cmap='Greys', interpolation='nearest')
+        axs.set_xlabel('x')
+        axs.set_ylabel('y')
+        axs.set_title('Región Factible (color ~ costo) con Máximo')
+        
+        # Agregar la barra de color
+        cbar = plt.colorbar(im, ax=axs)
+        cbar.set_label('Costo (mayor = más oscuro)')
+        
+        # Marcar el máximo en la gráfica
+        axs.scatter(x_max_val, y_max_val, color='blue', marker='*', s=150,
+                        label=f'Máximo: ({x_max_val:.2f}, {y_max_val:.2f})\nCosto = {max_val:.2f}')
+        axs.legend()
+        
+        fig.tight_layout()
+        return fig
+
+    # Función para evaluar la función de costo en un punto dado
+    def evaluar_punto(x, y):
+        valor = costo(x, y)
+        print(f"f({x}, {y}) = {valor}")
+
+    # Ejemplo de uso:
+    fig = plot_region_max(c=10)
+    #evaluar_punto(4, 5)
+
+    """ dt = 0.01
     t = np.arange(0, 30, dt)
     nse1 = np.random.randn(len(t))  # white noise 1
     nse2 = np.random.randn(len(t))  # white noise 2
@@ -36,7 +95,7 @@ def main(page: ft.Page):
     cxy, f = axs[1].cohere(s1, s2, 256, 1.0 / dt)
     axs[1].set_ylabel("coherence")
 
-    fig.tight_layout()
+    fig.tight_layout() """
     page.add(
         ft.Container(
             content=ft.Column(
