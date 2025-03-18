@@ -20,11 +20,11 @@ def get_restricciones():
     global MIN_X, MIN_Y, C
     return f"""x >= {MIN_X}\ny >= {MIN_Y}\nx + y <= {C}"""
     
-@router.post("/costo", response_model=float)
+@router.get("/costo", response_model=float)
 def get_costo(x: float, y: float):
     return costo(x, y)
 
-@router.post("/region_factible")
+@router.get("/region_factible")
 async def get_region_factible(mx: Optional[float] = None, my: Optional[float] = None, c: Optional[float] = None):
     global MIN_X, MIN_Y, C
     if mx is None:
@@ -34,4 +34,4 @@ async def get_region_factible(mx: Optional[float] = None, my: Optional[float] = 
     if c is None:
         c = C
     plot_region_max(c, mx, my)
-    return FileResponse("region_factible.png", media_type="image/png", filename="region_factible.png")
+    return FileResponse("region_factible.png", media_type="image/png", filename="region_factible.png", content_disposition_type="inline")
