@@ -1,7 +1,9 @@
 from matplotlib import pyplot as plt
 import numpy as np
+import sympy as sp
 
 from app.core.funciones import costo
+from app.core.taylor import taylor_series
 
 # Función para graficar la región factible con colores basados en el costo y marcar el máximo
 def plot_region_max(c=10, x_min=0, y_min=0):
@@ -55,4 +57,39 @@ def plot_region_max(c=10, x_min=0, y_min=0):
     )
     plt.legend()
     plt.savefig("region_factible.png", dpi=300, bbox_inches='tight')
+    #plt.show()
+
+def crear_grafico(funcion, a:float, n: int, x):
+    """
+    Crea un gráfico mostrando la función original y su aproximación con la serie de Taylor.
+
+    Parámetros:
+    -----------
+    funcion : sympy.Expr
+        Función simbólica a aproximar con la serie de Taylor.
+
+    a : float o sympy.Symbol
+        Punto alrededor del cual se expande la serie de Taylor.
+    n : int
+        Número de términos en la expansión de Taylor.
+    x : sympy.Symbol
+        Variable simbólica con respecto a la cual se deriva.
+
+    """
+    # Función original y su aproximación
+    f_original = sp.lambdify(x, funcion, 'numpy')
+    f_taylor = taylor_series(funcion, a, n, x)
+
+    # Graficar en un intervalo
+    label = rf"${sp.latex(funcion)}$"
+    x_vals = np.linspace(a-10, a+10, 400)
+    plt.figure(figsize=(10,6))
+    plt.plot(x_vals, f_original(x_vals),  label=label)
+    plt.plot(x_vals, f_taylor(x_vals), label=f'Taylor ({n} términos)', linestyle='--')
+    plt.scatter(a, f_original(a), color='red', label=f'Punto de Expansión: ({a}, {f_original(a):4f})') # grafica el punto donde se centra la grafica
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.title(f'Aproximación de Taylor de {label}')
+    plt.legend()
+    plt.savefig("Aproximación de Taylor.png", dpi=300, bbox_inches='tight')
     #plt.show()
