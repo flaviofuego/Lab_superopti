@@ -147,6 +147,56 @@ class SparseCOO:
             string += f"({row}, {col})\t{self.get_element(i)}\n"
         return string
 
+def generar_matriz_dispersa(n, m, dispersion=0.95, rango=(-1000, 1000)):
+    """
+    Genera una matriz de tamaño (n, m) con un porcentaje de elementos en cero.
+
+    Parámetros:
+    - n: Número de filas.
+    - m: Número de columnas.
+    - dispersion: Proporción de elementos en cero (por defecto 95%).
+    - rango: Tupla con el rango (mín, máx) de los valores no nulos.
+
+    Retorna:
+    - Matriz numpy de tamaño (n, m).
+    """
+    matriz = np.zeros((n, m))  # Matriz inicial con solo ceros
+    num_no_ceros = int((1 - dispersion) * n * m) # Número de elementos no nulos a insertar
+
+    # Generar índices aleatorios donde se ubicarán los valores no nulos
+    indices = np.random.choice(n * m, num_no_ceros, replace=False)
+
+    # Generar valores aleatorios para los elementos no nulos
+    valores = np.random.randint(rango[0], rango[1], num_no_ceros)
+
+    np.put(matriz, indices, valores) # Insertar los valores en la matriz
+
+    return matriz
+
+def comparar(matris_densa1, matris_densa2):
+    # Con implementación propia
+    sparse_custom = SparseCOO(matris_densa1)
+    sparse_custom2 = SparseCOO(matris_densa2)
+
+    t4 = time.time()
+    sparse_sum_custom = sparse_custom + sparse_custom2
+    t5 = time.time()
+
+    # Con SciPy
+    sparse_scipy = sp.coo_matrix(matris_densa1)
+    sparse_scipy2 = sp.coo_matrix(matris_densa2)
+    t6 = time.time()
+    sparse_sum_scipy = sparse_scipy + sparse_scipy2
+    t7 = time.time()
+
+    # Con matrix densa
+    t8 = time.time()
+    dense_sum = matris_densa1.tolist() + matris_densa2.tolist()
+    t9 = time.time()
+
+    print("Tiempo de suma - Implementación propia:", t5 - t4)
+    print("Tiempo de suma - SciPy COO:", t7 - t6)
+    print("Tiempo de suma - NumPy:", t9 - t8)
 
 import scipy.sparse as sp
 import time
@@ -171,26 +221,7 @@ print("Tiempo de creación - SciPy COO:", t3 - t2)
 # Crear otra matriz densa y convertirla a sparse
 dense2 = generar_matriz_dispersa(200, 200, dispersion=0.95, rango=(-1000, 1000))
 
-# Con implementación propia
-sparse_custom2 = SparseCOO(dense2)
-t4 = time.time()
-sparse_sum_custom = sparse_custom + sparse_custom2
-t5 = time.time()
-
-# Con SciPy
-sparse_scipy2 = sp.coo_matrix(dense2)
-t6 = time.time()
-sparse_sum_scipy = sparse_scipy + sparse_scipy2
-t7 = time.time()
-
-# Con matrix densa
-t8 = time.time()
-dense_sum = dense.tolist() + dense2.tolist()
-t9 = time.time()
-
-print("Tiempo de suma - Implementación propia:", t5 - t4)
-print("Tiempo de suma - SciPy COO:", t7 - t6)
-print("Tiempo de suma - NumPy:", t9 - t8)
+comparar(dense, dense2)
 
 """# Punto 2b
 

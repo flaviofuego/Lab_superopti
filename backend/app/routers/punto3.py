@@ -61,3 +61,6 @@ async def get_polinomio_taylor_preestablecido(expresion: Funcion, a: float, n: i
 
     return FileResponse("Aproximación de Taylor.png", media_type="image/png", filename="Aproximación de Taylor.png", content_disposition_type="inline")
 
+@router.get("/funciones")
+async def get_funciones():
+    return Funcion.__members__.values()
