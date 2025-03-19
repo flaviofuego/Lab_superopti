@@ -93,3 +93,30 @@ def crear_grafico(funcion, a:float, n: int, x):
     plt.legend()
     plt.savefig("Aproximación de Taylor.png", dpi=300, bbox_inches='tight')
     #plt.show()
+
+
+def comparar_convergencia(f_grad, f_newton, f_bfgs):
+    """
+    Compara la convergencia de tres métodos de optimización.
+
+    Parámetros:
+    -----------
+    f_grad : list
+        Lista con los valores de la función objetivo en cada iteración para Gradiente Descendente.
+    f_newton : list
+        Lista con los valores de la función objetivo en cada iteración para el Método de Newton.
+    f_bfgs : list
+        Lista con los valores de la función objetivo en cada iteración para BFGS.
+
+    """
+    plt.figure(figsize=(10,6))
+    plt.plot(f_grad, label=f'Gradiente Descendente ({len(f_grad)})', marker='o') # Graficar la evolución del valor de f en cada iteración para Gradiente Descendente
+    plt.plot(f_newton, label=f'Newton ({len(f_newton)})', marker='s') # Graficar la evolución del valor de f en cada iteración para el Método de Newton
+    plt.plot(f_bfgs, label=f'BFGS ({len(f_bfgs)})', marker='^') # Graficar la evolución del valor de f en cada iteración para BFGS
+    plt.xlabel('Iteración')
+    plt.ylabel('Valor de f(x, y)')
+    plt.title('Comparación de Convergencia de Métodos de Optimización')
+    plt.legend()
+    plt.grid(True)
+    plt.savefig("convergencia.png", dpi=300, bbox_inches='tight')
+    #plt.show()
