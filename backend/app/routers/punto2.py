@@ -47,7 +47,7 @@ def get_tiempo_ejecucion(metodo: Metodo, operacion: Operacion,escalar: Optional[
   results = visualizacion(metodo.value, operacion.value, escalar, tamaño, tamaño, dispersion)
 
   return JSONResponse(content={
-    "tiempo": float(results[0]),
+    "tiempo": results[0],
     "tamaño": tamaño,
     "dispersión": dispersion,
     "resultado": sparce_to_dict(results[1].tocoo())

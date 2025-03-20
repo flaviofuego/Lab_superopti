@@ -32,8 +32,8 @@ def generar_matriz_dispersa(n, m, dispersion=0.95, rango=(-1000, 1000)) -> np.nd
 class SparseCOO:
     def __init__(self, matrix: np.ndarray = []):
         self.shape = None
-        self.rows = []
-        self.cols = []
+        self.row = []
+        self.col = []
         self.data = []
 
         if len(matrix) <= 0:
@@ -50,8 +50,8 @@ class SparseCOO:
 
     def add_element(self, i, j, value):
         if value != 0:
-            self.rows.append(i)
-            self.cols.append(j)
+            self.row.append(i)
+            self.col.append(j)
             self.data.append(value)
 
     def get_element(self, i):
@@ -62,7 +62,7 @@ class SparseCOO:
 
     def to_dense(self):
         dense = np.zeros(self.shape)
-        for r, c, v in zip(self.rows, self.cols, self.data):
+        for r, c, v in zip(self.row, self.col, self.data):
             dense[r, c] = v
         return dense
 
@@ -70,12 +70,12 @@ class SparseCOO:
         # Suma de dos matrices sparse: se suma elemento a elemento.
         result = SparseCOO()
         result.shape = self.shape
-        result.rows = self.rows.copy()
-        result.cols = self.cols.copy()
+        result.row = self.row.copy()
+        result.col = self.col.copy()
         result.data = self.data.copy()
 
         # Agregar elementos de la segunda matriz
-        for i, j, v in zip(other.rows, other.cols, other.data):
+        for i, j, v in zip(other.row, other.col, other.data):
             data = result.get_element(i) # Buscar si el elemento ya existe en result
             if data is not None:
                 result.add_element(i, j, data + v)
@@ -87,8 +87,8 @@ class SparseCOO:
         string = f"Coords\tValues ({len(self.data)})\n"
 
         for i in range(self.shape[0]):
-            row = self.rows[i]
-            col = self.cols[i]
+            row = self.row[i]
+            col = self.col[i]
             string += f"({row}, {col})\t{self.get_element(i)}\n"
         return string
 
@@ -174,7 +174,7 @@ def visualizacion(metodo, operacion, escalar = 1, n = 200, m = 200, dispersion =
 
 def sparce_to_dict(sparse):
     values = {
-        (r,c): v for r, c, v in zip(sparse.rows, sparse.cols, sparse.data)
+        f"({r},{c})": float(v) for r, c, v in zip(sparse.row, sparse.col, sparse.data)
     }
 
     return {

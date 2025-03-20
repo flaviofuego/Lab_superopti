@@ -15,7 +15,7 @@ C = 10
 def get_funcion_costo():
     return f"f(x, y) = (x - 2)^2 + (y - 3)^2"
 
-@router.get("/resticciones", response_model=str)
+@router.get("/resticciones")
 def get_restricciones():
     global MIN_X, MIN_Y, C
     return [f"x >= {MIN_X}", f"y >= {MIN_Y}", f"x + y <= {C}"]
