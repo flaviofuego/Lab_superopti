@@ -122,7 +122,7 @@ def comparar(matris_densa1: np.ndarray, matris_densa2: np.ndarray) -> tuple:
 
     # Con matrix densa
     t8 = time.time()
-    dense_sum = matris_densa1.tolist() + matris_densa2.tolist()
+    dense_sum = matris_densa1 + matris_densa2
     t9 = time.time()
 
     return (t5 - t4, t7 - t6, t9 - t8), (sparse_sum_custom, sparse_sum_scipy, dense_sum)
@@ -170,3 +170,14 @@ def visualizacion(metodo, operacion, escalar = 1, n = 200, m = 200, dispersion =
     tiempo_ejecucion = fin - inicio
 
     return tiempo_ejecucion, resultado
+
+
+def sparce_to_dict(sparse):
+    values = {
+        (r,c): v for r, c, v in zip(sparse.rows, sparse.cols, sparse.data)
+    }
+
+    return {
+        "tamaño": len(sparse.data),
+        "values": values
+    }

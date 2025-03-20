@@ -11,16 +11,16 @@ router = APIRouter(prefix="/punto3", tags=["Punto 3"])
   description="Obtiene la aproximación de la serie de Taylor de una función cualquiera en un punto dado.",
   response_description="Imagen PNG con el gráfico de la aproximación de Taylor.",
 )
-async def get_polinomio_taylor_dinamico(expresion: str, a: float, n: int = 1):
+async def get_polinomio_taylor_dinamico(expresion: str, a: float, n: int = 2):
     x = sp.symbols('x')
     funcion = None
     try:
         funcion = sp.sympify(expresion, locals={'e': sp.E, 'pi': sp.pi, 'ln': sp.log})
-    except sp.SympifyError:
+    except:
         return {"error": "La expresión no es válida"}
 
-    if n <= 0:
-        return JSONResponse(status_code=400, content={"error": "El número de términos debe ser mayor a cero"})
+    if n <= 1:
+        return JSONResponse(status_code=400, content={"error": "El número de términos debe ser mayor a 1"})
     
     crear_grafico(funcion, a, n, x)
 
@@ -31,7 +31,7 @@ async def get_polinomio_taylor_dinamico(expresion: str, a: float, n: int = 1):
   description="Obtiene la aproximación de la serie de Taylor de una serie de funciones preestablecidas en un punto dado.",
   response_description="Imagen PNG con el gráfico de la aproximación de Taylor.",
 )
-async def get_polinomio_taylor_preestablecido(expresion: Funcion, a: float, n: int = 1):
+async def get_polinomio_taylor_preestablecido(expresion: Funcion, a: float, n: int = 2):
     x = sp.symbols('x')
 
     funciones = {
@@ -51,11 +51,11 @@ async def get_polinomio_taylor_preestablecido(expresion: Funcion, a: float, n: i
     funcion = None
     try:
         funcion = funciones[expresion.value]
-    except KeyError:
+    except:
         return {"error": "La función no es válida"}
 
-    if n <= 0:
-        return JSONResponse(status_code=400, content={"error": "El número de términos debe ser mayor a cero"})
+    if n <= 1:
+        return JSONResponse(status_code=400, content={"error": "El número de términos debe ser mayor a 1"})
     
     crear_grafico(funcion, a, n, x)
 
@@ -63,4 +63,4 @@ async def get_polinomio_taylor_preestablecido(expresion: Funcion, a: float, n: i
 
 @router.get("/funciones")
 async def get_funciones():
-    return Funcion.__members__.values()
+    return list(Funcion.__members__.values())

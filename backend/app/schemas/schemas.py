@@ -23,4 +23,5 @@ class Metodo(IntEnum):
 
 class Operacion(IntEnum):
     suma = 1
-    multiplicacion = 2
+    multiplicacionEscalar = 2
+    multiplicacionMatriz = 3

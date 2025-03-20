@@ -18,7 +18,7 @@ def get_funcion_costo():
 @router.get("/resticciones", response_model=str)
 def get_restricciones():
     global MIN_X, MIN_Y, C
-    return f"""x >= {MIN_X}\ny >= {MIN_Y}\nx + y <= {C}"""
+    return [f"x >= {MIN_X}", f"y >= {MIN_Y}", f"x + y <= {C}"]
     
 @router.get("/costo", response_model=float)
 def get_costo(x: float, y: float):
