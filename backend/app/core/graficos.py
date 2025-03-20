@@ -87,6 +87,8 @@ def crear_grafico(funcion, a:float, n: int, x):
     plt.plot(x_vals, f_original(x_vals),  label=label)
     plt.plot(x_vals, f_taylor(x_vals), label=f'Taylor ({n} términos)', linestyle='--')
     plt.scatter(a, f_original(a), color='red', label=f'Punto de Expansión: ({a}, {f_original(a):4f})') # grafica el punto donde se centra la grafica
+    plt.ylim(f_original(a)-10, f_original(a)+10)
+    plt.grid(True)
     plt.xlabel('x')
     plt.ylabel('f(x)')
     plt.title(f'Aproximación de Taylor de {label}')
