@@ -95,7 +95,7 @@ def crear_grafico(funcion, a:float, n: int, x):
     #plt.show()
 
 
-def comparar_convergencia(f_grad, f_newton, f_bfgs):
+def comparar_convergencia(iter_grad, iter_newton, iter_bfgs):
     """
     Compara la convergencia de tres métodos de optimización.
 
@@ -109,10 +109,26 @@ def comparar_convergencia(f_grad, f_newton, f_bfgs):
         Lista con los valores de la función objetivo en cada iteración para BFGS.
 
     """
+    
+    def separar_lista(lista):
+        x = []
+        y = []
+        for i in lista:
+            x.append(i[0])
+            y.append(i[1])
+        return x, y
+    
+    x_grad, y_grad = separar_lista(iter_grad)
+    x_newton, y_newton = separar_lista(iter_newton)
+    x_bfgs, y_bfgs = separar_lista(iter_bfgs)
+    
     plt.figure(figsize=(10,6))
-    plt.plot(f_grad, label=f'Gradiente Descendente ({len(f_grad)})', marker='o') # Graficar la evolución del valor de f en cada iteración para Gradiente Descendente
-    plt.plot(f_newton, label=f'Newton ({len(f_newton)})', marker='s') # Graficar la evolución del valor de f en cada iteración para el Método de Newton
-    plt.plot(f_bfgs, label=f'BFGS ({len(f_bfgs)})', marker='^') # Graficar la evolución del valor de f en cada iteración para BFGS
+    plt.plot(x_grad, label=f'Gradiente Descendente ({len(iter_grad)}) de X', marker='o') # Graficar la evolución del valor de f en cada iteración para Gradiente Descendente
+    plt.plot(y_grad, label=f'Gradiente Descendente ({len(iter_grad)}) de Y', marker='o') # Graficar la evolución del valor de f en cada iteración para Gradiente Descendente
+    plt.plot(x_newton, label=f'Newton ({len(iter_newton)}) de X', marker='s') # Graficar la evolución del valor de f en cada iteración para el Método de Newton
+    plt.plot(y_newton, label=f'Newton ({len(iter_newton)}) de Y', marker='s') # Graficar la evolución del valor de f en cada iteración para el Método de Newton
+    plt.plot(x_bfgs, label=f'BFGS ({len(iter_bfgs)}) de X', marker='^') # Graficar la evolución del valor de f en cada iteración para BFGS
+    plt.plot(y_bfgs, label=f'BFGS ({len(iter_bfgs)}) de Y', marker='^') # Graficar la evolución del valor de f en cada iteración para BFGS
     plt.xlabel('Iteración')
     plt.ylabel('Valor de f(x, y)')
     plt.title('Comparación de Convergencia de Métodos de Optimización')

@@ -26,9 +26,9 @@ def get_comvergencia(
     if tasa_aprendizaje <= 0:
         return {"error": "La tasa de aprendizaje debe ser un número positivo."}
 
-    f_grad = gradiente_descendente(f_opt, grad_f_opt, [x0, y0], tol=tol, max_iter=max_iter, lr=tasa_aprendizaje)[2]
-    f_newton = newton_method(f_opt, grad_f_opt, hess_f_opt, [x0, y0], tol=tol, max_iter=max_iter)[2]
-    f_bfgs = bfgs_method(f_opt,  [x0, y0], tol=tol, max_iter=max_iter)[2]
+    f_grad = gradiente_descendente(f_opt, grad_f_opt, [x0, y0], tol=tol, max_iter=max_iter, lr=tasa_aprendizaje)[1]
+    f_newton = newton_method(f_opt, grad_f_opt, hess_f_opt, [x0, y0], tol=tol, max_iter=max_iter)[1]
+    f_bfgs = bfgs_method(f_opt,  [x0, y0], tol=tol, max_iter=max_iter)[1]
   
     comparar_convergencia(f_grad, f_newton, f_bfgs)
     return FileResponse("convergencia.png", media_type="image/png", filename="convergencia.png", content_disposition_type="inline")
